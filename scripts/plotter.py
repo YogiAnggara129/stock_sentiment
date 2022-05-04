@@ -1,6 +1,8 @@
 import plotly.graph_objects as go
 import streamlit as st
+import sys
 from plotly.subplots import make_subplots
+from streamlit import cli as stcli
 
 def stock_plots(df_stock, **df_args):
     date = df_stock.index.tolist()
@@ -38,3 +40,20 @@ def stock_plots(df_stock, **df_args):
         ), row=1, col=1)
 
     return st.plotly_chart(fig, use_container_width=True)
+
+if __name__ == '__main__':
+    import pandas as pd
+    df_test =  pd.DataFrame(
+        dict(
+            Open = [1]*10,
+            Close = [1]*10,
+            High = [1]*10,
+            Low = [1]*10,
+            Volume = [1]*10
+        )
+    )
+    if st._is_running_with_streamlit:
+        stock_plots(df_test)
+    else:
+        sys.argv = ["streamlit", "run", sys.argv[0]]
+        sys.exit(stcli.main())
